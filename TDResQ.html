@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מערכת איתור נעדרים נייד - TDResQ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.5)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:%2300c9ff;stop-opacity:0.1"/><stop offset="100%" style="stop-color:%2392fe9d;stop-opacity:0.1"/></linearGradient></defs><rect width="1200" height="600" fill="url(%23g)"/></svg>');
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .floating-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            z-index: 10;
+            position: relative;
+        }
+        
+        .hero-content {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 20px;
+            margin: 0 auto 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #fff, #e0e0e0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(255,255,255,0.3); }
+            to { text-shadow: 0 0 30px rgba(255,255,255,0.6); }
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+        
+        .product-showcase {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            margin-bottom: 4rem;
+        }
+        
+        .device-visual {
+            background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .device-visual::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: scan 3s infinite;
+        }
+        
+        @keyframes scan {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+        
+        .backpack {
+            width: 200px;
+            height: 250px;
+            background: linear-gradient(145deg, #4a4a4a, #2a2a2a);
+            border-radius: 25px 25px 15px 15px;
+            margin: 0 auto;
+            position: relative;
+            box-shadow: inset 0 -10px 20px rgba(0,0,0,0.3);
+        }
+        
+        .backpack::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            height: 60px;
+            background: linear-gradient(145deg, #ff6b6b, #ff5252);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(255,107,107,0.3);
+        }
+        
+        .backpack::after {
+            content: '📡';
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            animation: pulse 2s infinite;
+        }
+        
+        .antenna {
+            position: absolute;
+            top: -10px;
+            right: 30px;
+            width: 3px;
+            height: 40px;
+            background: #ffd700;
+            border-radius: 2px;
+            animation: signal 1.5s infinite;
+        }
+        
+        .antenna::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -2px;
+            width: 7px;
+            height: 7px;
+            background: #ffd700;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #ffd700;
+        }
+        
+        @keyframes signal {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        .specs-panel {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .spec-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .spec-item:last-child {
+            border-bottom: none;
+        }
+        
+        .spec-label {
+            font-weight: 600;
+            color: #4ecdc4;
+        }
+        
+        .spec-value {
+            font-weight: 500;
+            text-align: left;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+        
+        .feature-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #4ecdc4;
+        }
+        
+        .control-panel {
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .control-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            align-items: center;
+        }
+        
+        .control-btn {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+        
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(78,205,196,0.3);
+        }
+        
+        .control-btn.danger {
+            background: linear-gradient(45deg, #ff6b6b, #ff5252);
+        }
+        
+        .control-btn.danger:hover {
+            box-shadow: 0 10px 20px rgba(255,107,107,0.3);
+        }
+        
+        .status-display {
+            background: rgba(0,0,0,0.5);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            min-height: 150px;
+            overflow-y: auto;
+        }
+        
+        .status-line {
+            color: #4ecdc4;
+            margin-bottom: 0.5rem;
+        }
+        
+        .status-line.warning {
+            color: #ffd700;
+        }
+        
+        .status-line.error {
+            color: #ff6b6b;
+        }
+        
+        .battery-indicator {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .battery {
+            width: 100px;
+            height: 20px;
+            border: 2px solid #4ecdc4;
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .battery::after {
+            content: '';
+            position: absolute;
+            right: -5px;
+            top: 5px;
+            width: 3px;
+            height: 10px;
+            background: #4ecdc4;
+            border-radius: 0 2px 2px 0;
+        }
+        
+        .battery-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4ecdc4, #44a08d);
+            transition: width 0.3s ease;
+            width: 75%;
+        }
+        
+        .signal-strength {
+            display: flex;
+            gap: 3px;
+            align-items: flex-end;
+        }
+        
+        .signal-bar {
+            width: 8px;
+            background: #4ecdc4;
+            border-radius: 2px;
+            transition: height 0.3s ease;
+        }
+        
+        @media (max-width: 768px) {
+            .product-showcase {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .control-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-particles" id="particles"></div>
+    
+    <div class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="logo">🔍</div>
+                <h1>מערכת איתור נעדרים</h1>
+                <p class="subtitle">טכנולוגיית OCTASIC BTS מתקדמת - דור 4 לאיתור, דור 2 לאימות</p>
+            </div>
+            
+            <div class="product-showcase">
+                <div class="device-visual">
+                    <div class="backpack">
+                        <div class="antenna"></div>
+                    </div>
+                </div>
+                
+                <div class="specs-panel">
+                    <h3 style="margin-bottom: 1.5rem; color: #4ecdc4;">מפרט טכני</h3>
+                    <div class="spec-item">
+                        <span class="spec-label">תדר פעולה:</span>
+                        <span class="spec-value">900 MHz</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">הספק שידור:</span>
+                        <span class="spec-value">2-5 וולט</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">זמן פעולה:</span>
+                        <span class="spec-value">4-8 שעות רציפות</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">טכנולוגיה:</span>
+                        <span class="spec-value">OCTASIC BTS-3500</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">תמיכה:</span>
+                        <span class="spec-value">2G/4G Dual Mode</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">משקל:</span>
+                        <span class="spec-value">< 2 ק"ג</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📡</div>
+                    <h3 class="feature-title">שידור דור 4 לאיתור</h3>
+                    <p>מערכת איתור מתקדמת המבוססת על רשת סלולרית דור 4, מאפשרת איתור מדויק ומהיר של נעדרים בטווח רחב</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔇</div>
+                    <h3 class="feature-title">תדר שקט דור 2</h3>
+                    <p>אימות מנויים באמצעות DF (Direction Finding) על תדר דור 2 שקט, המאפשר זיהוי ללא הפרעה לרשתות קיימות</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🎒</div>
+                    <h3 class="feature-title">עיצוב נייד</h3>
+                    <p>מערכת קומפקטית המתאימה לתיק גב, קלה לנשיאה ופריסה מהירה בשטח על ידי כונות חילוץ והצלה</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔋</div>
+                    <h3 class="feature-title">סוללות ארוכות טווח</h3>
+                    <p>מערכת סוללות מתקדמת המאפשרת פעולה רציפה של 4-8 שעות, אידיאלית למשימות חילוץ ממושכות</p>
+                </div>
+            </div>
+            
+            <div class="control-panel">
+                <h3 style="margin-bottom: 1.5rem; color: #4ecdc4;">לוח בקרה</h3>
+                
+                <div class="control-row">
+                    <button class="control-btn" onclick="startScanning()">🔍 התחל סריקה</button>
+                    <button class="control-btn" onclick="toggleNetwork()">📶 החלף רשת</button>
+                    <button class="control-btn danger" onclick="emergencyStop()">🚨 עצירת חירום</button>
+                </div>
+                
+                <div class="control-row">
+                    <div class="battery-indicator">
+                        <span>סוללה:</span>
+                        <div class="battery">
+                            <div class="battery-fill" id="batteryFill"></div>
+                        </div>
+                        <span id="batteryPercent">75%</span>
+                    </div>
+                    
+                    <div class="signal-strength">
+                        <span style="margin-left: 1rem;">עוצמת אות:</span>
+                        <div class="signal-bar" style="height: 10px;"></div>
+                        <div class="signal-bar" style="height: 15px;"></div>
+                        <div class="signal-bar" style="height: 20px;"></div>
+                        <div class="signal-bar" style="height: 12px;"></div>
+                    </div>
+                </div>
+                
+                <div class="status-display" id="statusDisplay">
+                    <div class="status-line">[12:34:56] מערכת מוכנה לפעולה</div>
+                    <div class="status-line">[12:34:57] תדר 900MHz - פעיל</div>
+                    <div class="status-line">[12:35:02] רשת 4G - מחוברת</div>
+                    <div class="status-line">[12:35:05] רשת 2G DF - זמינה</div>
+                    <div class="status-line warning">[12:35:10] ממתין לפקודת סריקה...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+                container.appendChild(particle);
+            }
+        }
+        
+        // Control functions
+        let isScanning = false;
+        let currentNetwork = '4G';
+        let batteryLevel = 75;
+        
+        function addStatusLine(message, type = '') {
+            const display = document.getElementById('statusDisplay');
+            const time = new Date().toLocaleTimeString('he-IL');
+            const line = document.createElement('div');
+            line.className = `status-line ${type}`;
+            line.textContent = `[${time}] ${message}`;
+            display.appendChild(line);
+            display.scrollTop = display.scrollHeight;
+        }
+        
+        function startScanning() {
+            if (!isScanning) {
+                isScanning = true;
+                addStatusLine('🔍 מתחיל סריקה לנעדרים...', 'warning');
+                setTimeout(() => {
+                    addStatusLine('📡 סורק תדר 900MHz');
+                    setTimeout(() => {
+                        addStatusLine('📱 זוהו 3 מכשירים בטווח');
+                        setTimeout(() => {
+                            addStatusLine('🎯 מבצע אימות DF על רשת 2G');
+                            setTimeout(() => {
+                                addStatusLine('✅ מיקום מזוהה: 31.7683° N, 35.2137° E');
+                            }, 2000);
+                        }, 1500);
+                    }, 1000);
+                }, 500);
+            } else {
+                isScanning = false;
+                addStatusLine('⏹️ עוצר סריקה');
+            }
+        }
+        
+        function toggleNetwork() {
+            currentNetwork = currentNetwork === '4G' ? '2G' : '4G';
+            addStatusLine(`🔄 מחליף לרשת ${currentNetwork}`);
+        }
+        
+        function emergencyStop() {
+            addStatusLine('🚨 עצירת חירום מופעלת!', 'error');
+            addStatusLine('📴 כל הפעילות הופסקה', 'error');
+            isScanning = false;
+        }
+        
+        // Battery simulation
+        function updateBattery() {
+            if (isScanning) {
+                batteryLevel = Math.max(0, batteryLevel - 0.1);
+                document.getElementById('batteryFill').style.width = batteryLevel + '%';
+                document.getElementById('batteryPercent').textContent = Math.round(batteryLevel) + '%';
+                
+                if (batteryLevel < 20) {
+                    addStatusLine('🔋 אזהרה: רמת סוללה נמוכה!', 'warning');
+                }
+            }
+        }
+        
+        // Initialize
+        createParticles();
+        setInterval(updateBattery, 1000);
+        
+        // Auto-demo
+        setTimeout(() => {
+            addStatusLine('🔧 בדיקת מערכות...');
+            setTimeout(() => {
+                addStatusLine('✅ כל המערכות תקינות');
+            }, 1000);
+        }, 3000);
+    </script>
+</body>
+</html>
