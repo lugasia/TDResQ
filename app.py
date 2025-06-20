@@ -284,7 +284,7 @@ with st.expander("📝 מפרט טכני", expanded=False):
     | **תדר פעולה** | 900 MHz |
     | **הספק שידור** | 2-5 וואט |
     | **זמן פעולה** | 4-8 שעות רציפות |
-    | **טכנולוגיה** | OCTASIC BTS-3500 |
+    | **טכנולוגיה** | WAVE100-SDR |
     | **תמיכה** | 2G/4G Dual Mode |
     | **משקל** | < 2 ק"ג |
     """, unsafe_allow_html=True)
